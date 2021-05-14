@@ -17,7 +17,7 @@ This is a simple one-pass assembler for MU0ARM CPU Project @ Imperial
 *input.txt*
 
     LDR R1 R0 +15 wp; this is a comment
-    ADD R1 R0 LSL3
+    ADD R1 R0 LS3
     SUB R0 R1
     STP; stops the program
 
