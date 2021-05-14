@@ -1,0 +1,4 @@
+LDR R1 R0 +15 wp
+ADD R1 R0 LSL3
+SUB R1 R0
+STP; stops
