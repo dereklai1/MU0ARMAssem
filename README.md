@@ -45,7 +45,7 @@ This is a simple one-pass assembler for MU0ARM CPU Project @ Imperial
     0x9400
     0x7000
 
-# Assembler Formatting
+# Assembly Code Formatting
 1. **Load Store Instructions** *(default opcode: 0000)*
 	\<OP\> \<Rd\> \<Rm\> \<n\> \<flags\>; \<comment\>
 	
@@ -67,6 +67,26 @@ This is a simple one-pass assembler for MU0ARM CPU Project @ Imperial
 	*Mandatory Fields: OP
 	Optional: n (default 0), comment*
 
+	Examples:
+	- `JMP 12` 
+		- Jump to location 12
+	- `STP`
+		- Stops the programs
+
 3. **Data Processing Instructions** *(default opcodes: 1XXX)*
+	\<OP\> \<Rd\> \<Rm\> \<sh\>; \<comment\>
+	*Mandatory Fields: OP, Rd, Rm
+	Optional: shift n (default to LS0), comment*
+
+	Examples:
+	- `ADD R1 R0 LS2`
+		- R1 := R1 + R0 * 4
+	- `SUB R1 R0 RS2`
+		- R1 := R1 - R0 / 4
 
 # Planned Features
+- Error Detection
+	- Register or immediate number must be within bounds
+	- Opcode typos
+- Automatically create default config file if no file is detected
+- Create input file for user
