@@ -52,6 +52,9 @@ Assembler::Assembler(const std::string& configpath) {
 
 }
 
+inline std::string Assembler::ParseReg(const std::string& token) {
+	return DecToNBitBin(token.substr(1, std::string::npos), 2);
+}
 
 std::string Assembler::translate(std::string instr) {
 
@@ -101,13 +104,9 @@ std::string Assembler::LoadStore(const std::vector<std::string>& tokens, bool is
 
 	l = (isLoad) ? "1" : "0";
 
-	d = tokens[1];
-	d = d.substr(1, std::string::npos);
-	d = DecToNBitBin(d, 2);
+	d = ParseReg(tokens[1]);
 
-	m = tokens[2];
-	m = m.substr(1, std::string::npos);
-	m = DecToNBitBin(m, 2);
+	m = ParseReg(tokens[2]);
 
 	if (tokens.size() == 3) {
 		n = "0000";
@@ -172,9 +171,7 @@ std::string Assembler::IntDataProcessing(const std::vector<std::string>& tokens,
 	
 	s = sbit ? "1" : "0";
 
-	d = tokens[1];
-	d = d.substr(1, std::string::npos);
-	d = DecToNBitBin(d, 2);
+	d = ParseReg(tokens[1]);
 
 	std::string tk2 = tokens[2];
 
@@ -185,9 +182,7 @@ std::string Assembler::IntDataProcessing(const std::vector<std::string>& tokens,
 		// register format
 		c = "0";
 
-		m = tokens[2];
-		m = m.substr(1, std::string::npos);
-		m = DecToNBitBin(m, 2);
+		m = ParseReg(tokens[2]);
 
 		if (tokennum > 3) {
 			shift = shifts[tokens[3].substr(0, 3)];
@@ -231,13 +226,8 @@ std::string Assembler::FloatDataProcessing(const std::vector<std::string>& token
 	std::string d, s, b, sh, m, X;
 	std::string ret = "";
 
-	d = tokens[1];
-	d = d.substr(1, std::string::npos);
-	d = DecToNBitBin(d, 2);
-
-	m = tokens[2];
-	m = m.substr(1, std::string::npos);
-	m = DecToNBitBin(m, 2);
+	d = ParseReg(tokens[1]);
+	m = ParseReg(tokens[2]);
 
 	if (tokens.size() > 3) {
 		// there is a shift
@@ -328,3 +318,5 @@ std::string BinToHex12(const std::string& binstr) {
 
 	return ret;
 }
+
+
