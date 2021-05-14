@@ -33,7 +33,7 @@ Assembler::Assembler(const std::string& configpath) {
 	infile.open(configpath);
 	if (!infile.is_open()) {
 		std::cout << "config file not found" << std::endl;
-		exit(-1);
+		return;
 	}
 
 	std::string opcode, code;
@@ -43,21 +43,6 @@ Assembler::Assembler(const std::string& configpath) {
 
 	infile.close();
 
-	//instructionSet = {
-	//	{"LDR", "0000"},
-	//	{"STR", "0000"},
-	//	{"JMP", "0100"},
-	//	{"JMI", "0101"},
-	//	{"JEQ", "0110"},
-	//	{"STP", "0111"},
-	//	{"ADD", "1000"},
-	//	{"SUB", "1001"},
-	//	{"MUL", "1010"},
-	//	{"DIV", "1011"},
-	//	{"MOV", "1100"},
-	//	{"CMP", "1101"}
-	//};
-
 	shifts = {
 		{"LSL", "00"},
 		{"LSR", "01"},
@@ -66,7 +51,6 @@ Assembler::Assembler(const std::string& configpath) {
 	};
 
 }
-
 
 
 std::string Assembler::translate(std::string instr) {
@@ -79,7 +63,7 @@ std::string Assembler::translate(std::string instr) {
 
 	// search dictionary for first token (opcode)
 	std::string op = tokens[0];
-	std::string opcode = instructionSet[op.substr(0, 3)];
+	std::string opcode = instructionSet[op];
 
 	std::string last12;
 	if (opcode == "0000") {
@@ -98,7 +82,7 @@ std::string Assembler::translate(std::string instr) {
 	}
 	else if (opcode[0] == '1') {
 		// data processing instructions
-		last12 = DataProcessing(tokens, (op[op.length() - 1] == 'S') ? true : false);
+		last12 = FloatDataProcessing(tokens);
 	}
 	else {
 		last12 = "BAD OPCODE";
@@ -125,28 +109,36 @@ std::string Assembler::LoadStore(const std::vector<std::string>& tokens, bool is
 	m = m.substr(1, std::string::npos);
 	m = DecToNBitBin(m, 2);
 
-	if (tokens[3].find_first_of("+-") != std::string::npos) {
-		if (tokens[3][0] == '+') {
-			u = "1";
-		}
-		else if (tokens[3][0] == '-') {
-			u = "0";
-		}
-		else {
-			std::cout << "invalid operator before N" << std::endl;
-			exit(-1);
-		}
-		n = DecToNBitBin(tokens[3].substr(1, std::string::npos), 4);
+	if (tokens.size() == 3) {
+		n = "0000";
+		u = "0";
+		w = "0";
+		p = "0";
 	}
 	else {
-		n = DecToNBitBin(tokens[3], 4);
-		u = "1";
-	}
+		if (tokens[3].find_first_of("+-") != std::string::npos) {
+			if (tokens[3][0] == '+') {
+				u = "1";
+			}
+			else if (tokens[3][0] == '-') {
+				u = "0";
+			}
+			else {
+				std::cout << "invalid operator before N" << std::endl;
+				exit(-1);
+			}
+			n = DecToNBitBin(tokens[3].substr(1, std::string::npos), 4);
+		}
+		else {
+			n = DecToNBitBin(tokens[3], 4);
+			u = "1";
+		}
 
-	std::string flags = tokens[4];
-	
-	w = (flags.find('w') != std::string::npos) ? "1" : "0";
-	p = (flags.find('p') != std::string::npos) ? "1" : "0";
+		std::string flags = tokens[4];
+
+		w = (flags.find('w') != std::string::npos) ? "1" : "0";
+		p = (flags.find('p') != std::string::npos) ? "1" : "0";
+	}
 
 	if (!isLoad) {
 		std::string tmp = m;
@@ -168,7 +160,7 @@ std::string Assembler::LoadStore(const std::vector<std::string>& tokens, bool is
 }
 
 
-std::string Assembler::DataProcessing(const std::vector<std::string>& tokens, bool sbit) {
+std::string Assembler::IntDataProcessing(const std::vector<std::string>& tokens, bool sbit) {
 	// Instruction format:
 	// reg: <OP(S)> <Rd> <Rm> <"SHIFT""B">; <comment>
 //token        0     1    2*        3     
@@ -234,6 +226,52 @@ std::string Assembler::DataProcessing(const std::vector<std::string>& tokens, bo
 
 	return ret;
 }
+
+std::string Assembler::FloatDataProcessing(const std::vector<std::string>& tokens) {
+	std::string d, s, b, sh, m, X;
+	std::string ret = "";
+
+	d = tokens[1];
+	d = d.substr(1, std::string::npos);
+	d = DecToNBitBin(d, 2);
+
+	m = tokens[2];
+	m = m.substr(1, std::string::npos);
+	m = DecToNBitBin(m, 2);
+
+	if (tokens.size() > 3) {
+		// there is a shift
+		if (tokens[3].find("LS") != std::string::npos) {
+			sh = "0";
+		}
+		else if (tokens[3].find("RS") != std::string::npos){
+			sh = "1";
+		}
+		else {
+			std::cout << "arithmetic shift not recognised" << std::endl;
+			exit(-1);
+		}
+
+		b = DecToNBitBin(tokens[3].substr(2, std::string::npos), 6);
+	}
+	else {
+		b = "000000";
+		sh = "0";
+	}
+
+	// undecided
+	X = "0";
+
+
+	ret += d;
+	ret += X;
+	ret += b;
+	ret += sh;
+	ret += m;
+
+	return ret;
+}
+
 
 
 // UTILITY

@@ -1,0 +1,10 @@
+LDR R1 R0 +15 wp
+ADD R1 R0 LS3
+SUB R1 R0
+STP; stops
+LDR R1 R2
+ADD R1 R0 LS2
+ADD R1 R0 RS1
+SUB R1 R0
+MOV R2 R0; moving:))
+STP; stop again
