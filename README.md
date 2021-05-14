@@ -9,7 +9,8 @@ This is a simple one-pass assembler for MU0ARM CPU Project @ Imperial
 
 # How to Use
 1. Download assembler binary and place in any directory.
-2. Create a file named `config.txt` and `input.txt` in the same directory as `Assembler.exe`.
+2. Run the executable and it will generate a file named `config.txt` and one named `input.txt` in the same directory as `Assembler.exe`.
+3. Type your assembly code into the `input.txt` and run the executable `Assembler.exe` again to generate the ouputfile.
 
 **Examples**
 *input.txt*
@@ -18,18 +19,6 @@ This is a simple one-pass assembler for MU0ARM CPU Project @ Imperial
     ADD R1 R0 LSL3
     SUB R0 R1
     STP; stops the program
-
-
-*config.txt*
-
-    LDR 0000
-    STR 0000
-    JMP 0100
-    JMI 0101
-    JEQ 0110
-    ...
-
-3. Run `Assembler.exe` and it should generate you an output file that looks similar to this.
 
 *output.txt*
 
@@ -88,5 +77,3 @@ This is a simple one-pass assembler for MU0ARM CPU Project @ Imperial
 - Error Detection
 	- Register or immediate number must be within bounds
 	- Opcode typos
-- Automatically create default config file if no file is detected
-- Create input file for user
