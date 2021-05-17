@@ -2,13 +2,9 @@
 #include <fstream>
 #include <vector>
 
-#include "Assembler.h"
+#include "Translater.h"
 
 
-inline bool file_exists(const std::string& name) {
-    std::ifstream f(name.c_str());
-    return f.good();
-}
 
 
 int main()
@@ -17,7 +13,7 @@ int main()
     const std::string inputpath = "./input.txt";
     const std::string outputpath = "./output.txt";
 
-    Assembler assem(configpath);
+    Translater assem(configpath);
 
     if (file_exists(inputpath) && file_exists(configpath)) {
 
@@ -40,7 +36,7 @@ int main()
 
         std::vector<std::string> binarylines;
         for (std::string line : lines) {
-            binarylines.push_back(assem.translate(line));
+            binarylines.push_back(assem.translate_line(line));
         }
 
         std::cout << "Writing Output File..." << std::endl;
