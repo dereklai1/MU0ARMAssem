@@ -8,9 +8,19 @@
 class Assembler {
 public:
 	Assembler(const std::string& configpath);
+	
+	void read_lines(const std::string& inputpath);
+	void first_pass();
+	void second_pass();
+	void write_output(const std::string& outputpath);
+	
 	std::string translate(std::string instr);
 
 private:
+	std::vector<std::string> lines;
+	std::vector<std::string> binarylines;
+	std::map<std::string, int> labels;
+
 	std::map<std::string, std::string> instructionSet;
 	std::map<std::string, std::string> shifts;
 

@@ -102,6 +102,19 @@ std::string ReverseStr(const std::string& str) {
 	return newstr;
 }
 
+std::string join_strings(const std::vector<std::string>& v, char delim) {
+	int size = v.size();
+	std::string out = "";
+	for (int i = 0; i < size; i++) {
+		out += v[i];
+		if (i != (size - 1)) {
+			out += delim;
+		}
+	}
+	return out;
+}
+
+
 std::string BinToHex12(const std::string& binstr) {
 
 	std::string ret = "";

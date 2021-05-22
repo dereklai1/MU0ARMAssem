@@ -9,25 +9,6 @@
 #include <map>
 
 
-//std::map<std::string, std::string> hexLU = {
-//	{"0000", "0"},
-//	{"0001", "1"},
-//	{"0010", "2"},
-//	{"0011", "3"},
-//	{"0100", "4"},
-//	{"0101", "5"},
-//	{"0110", "6"},
-//	{"0111", "7"},
-//	{"1000", "8"},
-//	{"1001", "9"},
-//	{"1010", "A"},
-//	{"1011", "B"},
-//	{"1100", "C"},
-//	{"1101", "D"},
-//	{"1110", "E"},
-//	{"1111", "F"}
-//};
-
 Assembler::Assembler(const std::string& configpath) {
 
 	std::ifstream infile;
@@ -52,6 +33,83 @@ Assembler::Assembler(const std::string& configpath) {
 	};
 
 }
+void Assembler::read_lines(const std::string& inputpath) {
+	std::ifstream infile;
+	infile.open(inputpath);
+	if (!infile.is_open()) {
+		std::cout << "file cannot be opened" << std::endl;
+		exit(-1);
+	}
+
+	std::string tmp;
+	while (getline(infile, tmp)) {
+		if (tmp != "") {
+			lines.push_back(tmp);
+		}
+	}
+	infile.close();
+}
+
+void Assembler::first_pass() {
+	int num_lines = lines.size();
+
+	// iterate through lines once to find .labels and remove them & note down line number
+	for (int i = 0; i < num_lines; i++) {
+
+		// clean up comments
+		std::string line = lines[i];
+		lines[i] = line.substr(0, line.find(';'));
+
+		// tokenize string
+		auto tokens = StringToVector(lines[i], ' ');
+
+		std::string firsttoken = tokens[0];
+		if (firsttoken[0] == '.') { // is label
+			labels.insert(std::pair<std::string, int>(firsttoken.substr(1, std::string::npos), i));
+			tokens.erase(tokens.begin());
+
+			lines[i] = join_strings(tokens, ' ');
+		}
+	}
+
+	// iterate through lines again to find labels and replace them with line number
+	for (int i = 0; i < num_lines; i++) {
+		for (const auto& pair : labels) {
+			int index = lines[i].find(pair.first);
+			if (index != std::string::npos) {
+				int label_len = pair.first.length();
+				lines[i].replace(index, label_len, std::to_string(pair.second));
+			}
+		}
+	}
+}
+
+void Assembler::second_pass() {
+
+	for (std::string line : lines) {
+		binarylines.push_back(translate(line));
+	}
+}
+
+void Assembler::write_output(const std::string& outputpath) {
+	
+	std::ofstream outfile(outputpath);
+	outfile << "Binary Format:" << "\n";
+	for (std::string line : binarylines) {
+		outfile << "0b" << line << "\n";
+	}
+
+
+	outfile << "\n" << "Hex format:" << "\n";
+	for (std::string line : binarylines) {
+
+		outfile << "0x" << BinToHex12(line) << "\n";
+	}
+
+	outfile.close();
+}
+
+
 
 std::string Assembler::ParseReg(const std::string& token) {
 	return int_to_bin(token.substr(1, std::string::npos), 2);

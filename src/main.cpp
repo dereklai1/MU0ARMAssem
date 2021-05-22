@@ -14,52 +14,25 @@ inline bool file_exists(const std::string& name) {
 
 int main()
 {
-    const std::string configpath = "./config.txt";
-    const std::string inputpath = "./input.txt";
-    const std::string outputpath = "./output.txt";
+    const std::string configpath = "./src\\config.txt";
+    const std::string inputpath = "./src\\input.txt";
+    const std::string outputpath = "./src\\output.txt";
 
     Assembler assem(configpath);
 
     if (file_exists(inputpath) && file_exists(configpath)) {
 
-        std::ifstream infile;
-        infile.open(inputpath);
-        if (!infile.is_open()) {
-            std::cout << "file cannot be opened" << std::endl;
-            exit(-1);
-        }
-
-        std::vector<std::string> lines;
-
-        std::string tmp;
-        while (getline(infile, tmp)) {
-            lines.push_back(tmp);
-        }
-        infile.close();
+        assem.read_lines(inputpath);
 
         std::cout << "Translating..." << std::endl;
 
-        std::vector<std::string> binarylines;
-        for (std::string line : lines) {
-            binarylines.push_back(assem.translate(line));
-        }
+        assem.first_pass();
+        assem.second_pass();
 
         std::cout << "Writing Output File..." << std::endl;
 
-        std::ofstream outfile(outputpath);
-        outfile << "Binary Format:" << "\n";
-        for (std::string line : binarylines) {
-            outfile << "0b" << line << "\n";
-        }
 
-
-        outfile << "\n" << "Hex format:" << "\n";
-        for (std::string line : binarylines) {
-
-            outfile << "0x" << BinToHex12(line) << "\n";
-        }
-
-        outfile.close();
+        assem.write_output(outputpath);
 
     }
     else {
