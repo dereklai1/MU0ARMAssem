@@ -1,24 +1,8 @@
-LDR R1 R0 +1 wp; comment
+LDR R1 R0 +1 wp
 LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-LDR R2 R0 +1 wp
-.loopstart ADD R2 R1
-SUB R2 R1
-JMP loopstart
-STP
-
-
+.loop SUB R2 R1
+CMP R2 R1
+JMI end
+JMP loop
+.end STP
 

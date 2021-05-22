@@ -14,9 +14,9 @@ inline bool file_exists(const std::string& name) {
 
 int main()
 {
-    const std::string configpath = "./src\\config.txt";
-    const std::string inputpath = "./src\\input.txt";
-    const std::string outputpath = "./src\\output.txt";
+    const std::string configpath = "./config.txt";
+    const std::string inputpath = "./input.txt";
+    const std::string outputpath = "./output.txt";
 
     Assembler assem(configpath);
 
