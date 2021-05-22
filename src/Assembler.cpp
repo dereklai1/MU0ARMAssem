@@ -1,4 +1,5 @@
 #include "Assembler.h"
+#include "utility.h"
 
 #include <string>
 #include <iostream>
@@ -8,24 +9,24 @@
 #include <map>
 
 
-std::map<std::string, std::string> hexLU = {
-	{"0000", "0"},
-	{"0001", "1"},
-	{"0010", "2"},
-	{"0011", "3"},
-	{"0100", "4"},
-	{"0101", "5"},
-	{"0110", "6"},
-	{"0111", "7"},
-	{"1000", "8"},
-	{"1001", "9"},
-	{"1010", "A"},
-	{"1011", "B"},
-	{"1100", "C"},
-	{"1101", "D"},
-	{"1110", "E"},
-	{"1111", "F"}
-};
+//std::map<std::string, std::string> hexLU = {
+//	{"0000", "0"},
+//	{"0001", "1"},
+//	{"0010", "2"},
+//	{"0011", "3"},
+//	{"0100", "4"},
+//	{"0101", "5"},
+//	{"0110", "6"},
+//	{"0111", "7"},
+//	{"1000", "8"},
+//	{"1001", "9"},
+//	{"1010", "A"},
+//	{"1011", "B"},
+//	{"1100", "C"},
+//	{"1101", "D"},
+//	{"1110", "E"},
+//	{"1111", "F"}
+//};
 
 Assembler::Assembler(const std::string& configpath) {
 
@@ -52,8 +53,8 @@ Assembler::Assembler(const std::string& configpath) {
 
 }
 
-inline std::string Assembler::ParseReg(const std::string& token) {
-	return DecToNBitBin(token.substr(1, std::string::npos), 2);
+std::string Assembler::ParseReg(const std::string& token) {
+	return int_to_bin(token.substr(1, std::string::npos), 2);
 }
 
 std::string Assembler::translate(std::string instr) {
@@ -80,7 +81,7 @@ std::string Assembler::translate(std::string instr) {
 			last12 = "000000000000";
 		}
 		else {
-			last12 = DecToNBitBin(tokens[1], 12);
+			last12 = int_to_bin(tokens[1], 12);
 		}
 	}
 	else if (opcode[0] == '1') {
@@ -126,10 +127,10 @@ std::string Assembler::LoadStore(const std::vector<std::string>& tokens, bool is
 				std::cout << "invalid operator before N" << std::endl;
 				exit(-1);
 			}
-			n = DecToNBitBin(tokens[3].substr(1, std::string::npos), 4);
+			n = int_to_bin(tokens[3].substr(1, std::string::npos), 4);
 		}
 		else {
-			n = DecToNBitBin(tokens[3], 4);
+			n = int_to_bin(tokens[3], 4);
 			u = "1";
 		}
 
@@ -186,7 +187,7 @@ std::string Assembler::IntDataProcessing(const std::vector<std::string>& tokens,
 
 		if (tokennum > 3) {
 			shift = shifts[tokens[3].substr(0, 3)];
-			b = DecToNBitBin(tokens[3].substr(3, std::string::npos), 4);
+			b = int_to_bin(tokens[3].substr(3, std::string::npos), 4);
 		}
 		else {
 			shift = "00";
@@ -206,9 +207,9 @@ std::string Assembler::IntDataProcessing(const std::vector<std::string>& tokens,
 		// TODO: HEX TO BINARY
 		//if(tokens[2].substr(0, 2) == "0x")
 
-		k = DecToNBitBin(tokens[2], 5);
+		k = int_to_bin(tokens[2], 5);
 		if (tokennum > 3) {
-			rot = DecToNBitBin(tokens[3].substr(3, std::string::npos), 3);
+			rot = int_to_bin(tokens[3].substr(3, std::string::npos), 3);
 		}
 		else {
 			rot = "000";
@@ -242,7 +243,7 @@ std::string Assembler::FloatDataProcessing(const std::vector<std::string>& token
 			exit(-1);
 		}
 
-		b = DecToNBitBin(tokens[3].substr(2, std::string::npos), 6);
+		b = int_to_bin(tokens[3].substr(2, std::string::npos), 6);
 	}
 	else {
 		b = "000000";
@@ -265,58 +266,42 @@ std::string Assembler::FloatDataProcessing(const std::vector<std::string>& token
 
 
 // UTILITY
-std::vector<std::string> StringToVector(std::string str, char separator) {
-	std::vector<std::string> words;
+//std::vector<std::string> StringToVector(std::string str, char separator) {
+//	std::vector<std::string> words;
+//
+//	std::stringstream ss(str);
+//	std::string temp;
+//
+//	while (getline(ss, temp, separator)) {
+//		words.push_back(temp);
+//	}
+//
+//	return words;
+//}
+//
+//
 
-	std::stringstream ss(str);
-	std::string temp;
-
-	while (getline(ss, temp, separator)) {
-		words.push_back(temp);
-	}
-
-	return words;
-}
-
-
-std::string DecToNBitBin(const std::string& dec, unsigned int n) {
-	int num = std::stoi(dec);
-	std::string bin = "";
-
-	while (num > 0) {
-		bin += std::to_string(num % 2);
-		num = num / 2;
-	}
-
-	bin = ReverseStr(bin);
-
-	while (bin.length() < n) {
-		bin = "0" + bin;
-	}
-
-	return bin;
-}
-
-
-std::string ReverseStr(const std::string& str) {
-	int len = str.length();
-	std::string newstr = "";
-	for (int i = len - 1; i >= 0; i--) {
-		newstr += str[i];
-	}
-	return newstr;
-}
-
-std::string BinToHex12(const std::string& binstr) {
-	
-	std::string ret = "";
-	
-	for (int i = 0; i < 16; i += 4) {
-		std::string part = binstr.substr(i, 4);
-		ret += hexLU[part];
-	}
-
-	return ret;
-}
+//
+//
+//std::string ReverseStr(const std::string& str) {
+//	int len = str.length();
+//	std::string newstr = "";
+//	for (int i = len - 1; i >= 0; i--) {
+//		newstr += str[i];
+//	}
+//	return newstr;
+//}
+//
+//std::string BinToHex12(const std::string& binstr) {
+//	
+//	std::string ret = "";
+//	
+//	for (int i = 0; i < 16; i += 4) {
+//		std::string part = binstr.substr(i, 4);
+//		ret += hexLU[part];
+//	}
+//
+//	return ret;
+//}
 
 

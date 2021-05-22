@@ -5,11 +5,6 @@
 #include <map>
 
 
-std::vector<std::string> StringToVector(std::string str, char separator);
-std::string DecToNBitBin(const std::string& dec, unsigned int n);
-std::string BinToHex12(const std::string& binstr);
-std::string ReverseStr(const std::string& str);
-
 class Assembler {
 public:
 	Assembler(const std::string& configpath);
@@ -23,7 +18,7 @@ private:
 	std::string FloatDataProcessing(const std::vector<std::string>& tokens);
 	std::string IntDataProcessing(const std::vector<std::string>& tokens, bool sbit);
 
-	inline std::string ParseReg(const std::string& token);
+	std::string ParseReg(const std::string& token);
 };
 
 const std::string config_data = R"(LDR 0000
