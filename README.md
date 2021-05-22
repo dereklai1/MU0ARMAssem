@@ -1,3 +1,4 @@
+
 # MU0ARM Assembler
 This is a simple one-pass assembler for MU0ARM CPU Project @ Imperial
 
@@ -6,11 +7,12 @@ This is a simple one-pass assembler for MU0ARM CPU Project @ Imperial
 # Features
 - Comments within assembly code
 - Customizable opcodes for your own instruction set
+- Use of .labels in assembly code (easier subroutine calls/loops)
 
 # How to Use
 1. Download assembler binary and place in any directory.
-2. Run the executable and it will generate a file named `config.txt` and one named `input.txt` in the same directory as `Assembler.exe`.
-3. Type your assembly code into the `input.txt` and run the executable `Assembler.exe` again to generate the ouputfile.
+2. Run the executable and it will generate a default config file named `config.txt` and one named `input.txt` in the same directory as `Assembler.exe`.
+3. Type your assembly code into the `input.txt` and run the executable `Assembler.exe` again to generate the output file.
 
 **Examples**
 
@@ -73,6 +75,24 @@ This is a simple one-pass assembler for MU0ARM CPU Project @ Imperial
 		- R1 := R1 + R0 * 4
 	- `SUB R1 R0 RS2`
 		- R1 := R1 - R0 / 4
+
+4. **Using .labels**
+	Labels are used to make jumping to subroutines or loops much easier to code as you do not need to remember the memory address for the jump. For example, "JMP .loopstart" rather than "JMP 142".
+	
+	**NOTE:** *Always type the .label as the first token on the line you want to jump to.*
+
+	Example code for loop program:
+	
+	```
+	LDR R1 R0 +1 wp 
+	LDR R2 R0 +1 wp
+	.loop SUB R2 R1
+	CMP R2 R1
+	JMI end; can directly reference label
+	JMP loop; supports multiple labels
+	.end STP
+	```
+
 
 # Planned Features
 - Error Detection
