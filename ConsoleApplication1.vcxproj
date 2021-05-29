@@ -21,11 +21,11 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Assembler.cpp" />
-    <ClCompile Include="src\utilityfuncs.cpp" />
+    <ClCompile Include="src\util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Assembler.h" />
-    <ClInclude Include="src\utility.h" />
+    <ClInclude Include="src\util.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\config.txt" />

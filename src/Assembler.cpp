@@ -1,5 +1,5 @@
 #include "Assembler.h"
-#include "utility.h"
+#include "util.h"
 
 #include <string>
 #include <iostream>
@@ -33,6 +33,7 @@ Assembler::Assembler(const std::string& configpath) {
 	};
 
 }
+
 void Assembler::read_lines(const std::string& inputpath) {
 	std::ifstream infile;
 	infile.open(inputpath);
@@ -101,9 +102,10 @@ void Assembler::write_output(const std::string& outputpath) {
 
 
 	outfile << "\n" << "Hex format:" << "\n";
-	for (std::string line : binarylines) {
+	int len = binarylines.size();
+	for (int i = 0; i < len; ++i) {
 
-		outfile << "0x" << BinToHex12(line) << "\n";
+		outfile << i << ": 0x" << BinToHex12(binarylines[i]) << "\n";
 	}
 
 	outfile.close();

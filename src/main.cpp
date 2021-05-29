@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "Assembler.h"
-#include "utility.h"
+#include "util.h"
 
 
 inline bool file_exists(const std::string& name) {

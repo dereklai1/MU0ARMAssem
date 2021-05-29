@@ -12,3 +12,4 @@ std::string ReverseStr(const std::string& str);
 std::string BinToHex12(const std::string& binstr);
 
 inline bool file_exists(const std::string& name);
+

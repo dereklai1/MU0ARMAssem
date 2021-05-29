@@ -6,7 +6,7 @@
 #include <map>
 #include <algorithm>
 
-#include "utility.h"
+#include "util.h"
 
 std::map<std::string, std::string> hexLU = {
 	{"0000", "0"},
@@ -26,10 +26,6 @@ std::map<std::string, std::string> hexLU = {
 	{"1110", "E"},
 	{"1111", "F"}
 };
-
-
-
-
 
 std::string int_to_halfprecision(const std::string str) {
 	return int_to_halfprecision(std::stoi(str));

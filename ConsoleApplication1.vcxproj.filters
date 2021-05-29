@@ -21,7 +21,7 @@
     <ClCompile Include="src\Assembler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\utilityfuncs.cpp">
+    <ClCompile Include="src\util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,7 +29,7 @@
     <ClInclude Include="src\Assembler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\utility.h">
+    <ClInclude Include="src\util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
