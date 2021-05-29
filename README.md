@@ -46,12 +46,12 @@ This is a simple one-pass assembler for MU0ARM CPU Project @ Imperial
 
 	Examples:
 	- `LDR R1 R0 +15 wp`
-		- R1 := [R0 + 15] with post-increment (**p** flag) 
-		- R0 := R0 + 15 write-back (**w** flag)
+		- R1 := [R0 + 15] with post-increment (**p** bit) 
+		- R0 := R0 + 15 write-back (**w** bit)
 	
 	-  `STR R1 R0 -3 w`
 		- mem[R0 - 3] := R1
-		- R0 := R0 - 3 write-back (**w** flag)
+		- R0 := R0 - 3 write-back (**w** bit)
 
 2. **Program Counter Instructions** *(default opcodes: 0XXX, except 0000)*
 	\<OP\> \<N\>; \<comment\>
