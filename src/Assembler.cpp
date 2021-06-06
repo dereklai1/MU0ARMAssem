@@ -8,6 +8,8 @@
 #include <fstream>
 #include <map>
 
+// MOV fixed point to floating FMV
+const int ROM_OFFSET = 256;
 
 Assembler::Assembler(const std::string& configpath) {
 
@@ -79,7 +81,7 @@ void Assembler::first_pass() {
 			int index = lines[i].find(pair.first);
 			if (index != std::string::npos) {
 				int label_len = pair.first.length();
-				lines[i].replace(index, label_len, std::to_string(pair.second));
+				lines[i].replace(index, label_len, std::to_string(pair.second + ROM_OFFSET));
 			}
 		}
 	}
@@ -133,6 +135,9 @@ std::string Assembler::translate(std::string instr) {
 	if (opcode == "0000") {
 		// ldst
 		last12 = LoadStore(tokens, (tokens[0] == "LDR") ? true : false);
+	}
+	else if (opcode == "1110") {
+		last12 = int_to_bin(tokens[2], 12);
 	}
 	else if (opcode[0] == '0') {
 		// other pc counter instructions
@@ -323,6 +328,9 @@ std::string Assembler::FloatDataProcessing(const std::vector<std::string>& token
 	return ret;
 }
 
+std::string Assembler::FloatingMove(const std::vector<std::string>& tokens) {
+
+}
 
 
 // UTILITY

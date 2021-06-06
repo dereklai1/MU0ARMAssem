@@ -27,12 +27,14 @@ private:
 	std::string LoadStore(const std::vector<std::string>& tokens, bool isLoad);
 	std::string FloatDataProcessing(const std::vector<std::string>& tokens);
 	std::string IntDataProcessing(const std::vector<std::string>& tokens, bool sbit);
+	std::string FloatingMove(const std::vector<std::string>& tokens);
 
 	std::string ParseReg(const std::string& token);
 };
 
 const std::string config_data = R"(LDR 0000
 STR 0000
+SWP 0011
 JMP 0100
 JMI 0101
 JEQ 0110
@@ -42,4 +44,5 @@ SUB 1001
 MUL 1010
 DIV 1011
 MOV 1100
-CMP 1101)";
+CMP 1101
+FLD 1110)";
