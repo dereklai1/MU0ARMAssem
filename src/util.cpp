@@ -73,7 +73,13 @@ std::string int_to_bin(int num, unsigned int n) {
 	return bin;
 }
 
-
+std::string bin_to_2s(const std::string& bin) {
+	std::string ret = "";
+	for (int i = 0; i < bin.size(); ++i) {
+		ret += (bin[i] == '0') ? '1' : '0';
+	}
+	
+}
 
 std::vector<std::string> StringToVector(std::string str, char separator) {
 	std::vector<std::string> words;

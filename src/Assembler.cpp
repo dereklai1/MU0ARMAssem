@@ -137,7 +137,8 @@ std::string Assembler::translate(std::string instr) {
 		last12 = LoadStore(tokens, (tokens[0] == "LDR") ? true : false);
 	}
 	else if (opcode == "1110") {
-		last12 = int_to_bin(tokens[2], 12);
+
+		last12 = FloatingLoad(tokens);
 	}
 	else if (opcode[0] == '0') {
 		// other pc counter instructions
@@ -308,19 +309,15 @@ std::string Assembler::FloatDataProcessing(const std::vector<std::string>& token
 			exit(-1);
 		}
 
-		b = int_to_bin(tokens[3].substr(2, std::string::npos), 6);
+		b = int_to_bin(tokens[3].substr(2, std::string::npos), 7);
 	}
 	else {
-		b = "000000";
+		b = "0000000";
 		sh = "0";
 	}
 
-	// undecided
-	X = "0";
-
 
 	ret += d;
-	ret += X;
 	ret += b;
 	ret += sh;
 	ret += m;
@@ -328,8 +325,11 @@ std::string Assembler::FloatDataProcessing(const std::vector<std::string>& token
 	return ret;
 }
 
-std::string Assembler::FloatingMove(const std::vector<std::string>& tokens) {
-
+std::string Assembler::FloatingLoad(const std::vector<std::string>& tokens) {
+	std::string ret = "";
+	std::string d, num;
+	d = ParseReg(tokens[1]);
+	
 }
 
 
