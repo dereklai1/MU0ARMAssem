@@ -5,6 +5,12 @@
 #include "Assembler.h"
 #include "util.h"
 
+// TODO:
+// 1. Implement hex, binary, decimal conversion
+// 2. Segment different blocks of code using tags, @CPU 1
+// 3. add asserts so that program crashes when stuff goes wrong
+//
+
 
 inline bool file_exists(const std::string& name) {
     std::ifstream f(name.c_str());
