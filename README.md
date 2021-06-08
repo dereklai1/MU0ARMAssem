@@ -25,17 +25,19 @@ This is a simple one-pass assembler for MU0ARM CPU Project @ Imperial
 
 *output.txt*
 
-    Binary Format:
-    0b0000011111111100
-    0b1000010000110000
-    0b1001010000000000
-    0b0111000000000000
-     
-    Hex Format:
-    0x07FC
-    0x8430
-    0x9400
-    0x7000
+```
+Hex format:
+0x100: 0x07FC	LDR R1 R0 +15 wp
+0x101: 0x8418	ADD R1 R0 LS3
+0x102: 0x9001	SUB R0 R1
+0x103: 0x7000	STP
+
+Binary Format:
+0x100: 0b0000011111111100
+0x101: 0b1000010000011000
+0x102: 0b1001000000000001
+0x103: 0b0111000000000000
+```
 
 # Assembly Code Formatting
 1. **Load Store Instructions** *(default opcode: 0000)*
