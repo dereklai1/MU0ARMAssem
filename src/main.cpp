@@ -6,7 +6,7 @@
 #include "util.h"
 
 // TODO:
-// 1. Implement hex, binary, decimal conversion
+
 // 2. Segment different blocks of code using tags, @CPU 1
 // 3. add asserts so that program crashes when stuff goes wrong
 //
@@ -20,10 +20,11 @@ inline bool file_exists(const std::string& name) {
 
 int main()
 {
+
     std::string inputpath = "./input.txt";
     std::string outputpath = "./output.txt";
 
-     std::string configpath = "./config.txt";
+    std::string configpath = "./config.txt";
 
     Assembler assem(configpath);
 

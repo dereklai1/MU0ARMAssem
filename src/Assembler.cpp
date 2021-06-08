@@ -61,7 +61,16 @@ void Assembler::first_pass() {
 
 		// clean up comments
 		std::string line = lines[i];
+
 		lines[i] = line.substr(0, line.find(';'));
+
+		if (line.find(';') != std::string::npos) {
+			comments.push_back(line.substr(line.find(';') + 1, std::string::npos));
+		}
+		else {
+			comments.push_back(" ");
+		}
+
 
 		// tokenize string
 		auto tokens = StringToVector(lines[i], ' ');
@@ -97,19 +106,20 @@ void Assembler::second_pass() {
 void Assembler::write_output(const std::string& outputpath) {
 	
 	std::ofstream outfile(outputpath);
-	outfile << "Binary Format:" << "\n";
-	for (std::string line : binarylines) {
-		outfile << "0b" << line << "\n";
-	}
 
-
-	outfile << "\n" << "Hex format:" << "\n";
+	outfile << "Hex format:" << "\n";
 	int len = binarylines.size();
 	for (int i = 0; i < len; ++i) {
-
-		outfile << i << ": 0x" << BinToHex12(binarylines[i]) << "\n";
+		std::string linehex = BinToHex12(int_to_bin(i + ROM_OFFSET, 12));
+		outfile << "0x" << linehex << ": 0x" << BinToHex12(binarylines[i]) << "\t" << lines[i] << "\n";
 	}
 
+	outfile << "\n" << "Binary Format:" << "\n";
+	for (int i = 0; i < len; ++i) {
+		std::string linehex = BinToHex12(int_to_bin(i + ROM_OFFSET, 12));
+		outfile << "0x" << linehex << ": 0b" << binarylines[i] << "\n";
+	}
+	
 	outfile.close();
 }
 
@@ -132,13 +142,16 @@ std::string Assembler::translate(std::string instr) {
 	std::string opcode = instructionSet[op];
 
 	std::string last12;
-	if (opcode == "0000") {
-		// ldst
+	if (opcode == "0000") { // LDST
 		last12 = LoadStore(tokens, (tokens[0] == "LDR") ? true : false);
 	}
-	else if (opcode == "1110") {
+	else if (opcode == "1110") { // FLD
 
 		last12 = FloatingLoad(tokens);
+	}
+	else if (opcode == "1111") { // LUT
+		last12 = ParseReg(tokens[1]);
+		last12 += any_num_to_binary(tokens[2], 10);
 	}
 	else if (opcode[0] == '0') {
 		// other pc counter instructions
@@ -147,7 +160,7 @@ std::string Assembler::translate(std::string instr) {
 			last12 = "000000000000";
 		}
 		else {
-			last12 = int_to_bin(tokens[1], 12);
+			last12 = any_num_to_binary(tokens[1], 12);
 		}
 	}
 	else if (opcode[0] == '1') {
@@ -193,10 +206,10 @@ std::string Assembler::LoadStore(const std::vector<std::string>& tokens, bool is
 				std::cout << "invalid operator before N" << std::endl;
 				exit(-1);
 			}
-			n = int_to_bin(tokens[3].substr(1, std::string::npos), 4);
+			n = any_num_to_binary(tokens[3].substr(1, std::string::npos), 4);
 		}
 		else {
-			n = int_to_bin(tokens[3], 4);
+			n = any_num_to_binary(tokens[3], 4);
 			u = "1";
 		}
 
@@ -253,7 +266,7 @@ std::string Assembler::IntDataProcessing(const std::vector<std::string>& tokens,
 
 		if (tokennum > 3) {
 			shift = shifts[tokens[3].substr(0, 3)];
-			b = int_to_bin(tokens[3].substr(3, std::string::npos), 4);
+			b = any_num_to_binary(tokens[3].substr(3, std::string::npos), 4);
 		}
 		else {
 			shift = "00";
@@ -273,9 +286,9 @@ std::string Assembler::IntDataProcessing(const std::vector<std::string>& tokens,
 		// TODO: HEX TO BINARY
 		//if(tokens[2].substr(0, 2) == "0x")
 
-		k = int_to_bin(tokens[2], 5);
+		k = any_num_to_binary(tokens[2], 5);
 		if (tokennum > 3) {
-			rot = int_to_bin(tokens[3].substr(3, std::string::npos), 3);
+			rot = any_num_to_binary(tokens[3].substr(3, std::string::npos), 3);
 		}
 		else {
 			rot = "000";
@@ -309,7 +322,7 @@ std::string Assembler::FloatDataProcessing(const std::vector<std::string>& token
 			exit(-1);
 		}
 
-		b = int_to_bin(tokens[3].substr(2, std::string::npos), 7);
+		b = any_num_to_binary(tokens[3].substr(2, std::string::npos), 7);
 	}
 	else {
 		b = "0000000";
@@ -329,7 +342,20 @@ std::string Assembler::FloatingLoad(const std::vector<std::string>& tokens) {
 	std::string ret = "";
 	std::string d, num;
 	d = ParseReg(tokens[1]);
-	
+	int val = std::stoi(tokens[2]);
+	std::cout << "FLD val: " << val << std::endl;
+	if (val > 0) {
+		num = any_num_to_binary(std::to_string(val), 10);
+	}
+	else {
+
+		num = bin_to_2s(any_num_to_binary(std::to_string(-val), 10));
+	}
+	std::cout << "FLD num: " << num << std::endl;
+
+	ret += d;
+	ret += num;
+	return ret;
 }
 
 

@@ -1,8 +1,6 @@
-LDR R1 R0 +1 wp
-LDR R2 R0 +1 wp
-.loop SUB R2 R1
-CMP R2 R1
-JMI end
-JMP loop
-.end STP
-
+LDR R1 R0 +1 wp; this is a comment
+FLD R0 120;
+FLD R1 -120;
+FLD R3 1;
+FLD R2 -2;
+STP; line 0x102 comment

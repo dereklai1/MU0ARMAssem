@@ -18,6 +18,7 @@ public:
 
 private:
 	std::vector<std::string> lines;
+	std::vector<std::string> comments;
 	std::vector<std::string> binarylines;
 	std::map<std::string, int> labels;
 
@@ -47,4 +48,5 @@ MUL 1010
 DIV 1011
 MOV 1100
 CMP 1101
-FLD 1110)";
+FLD 1110
+LUT 1111)";

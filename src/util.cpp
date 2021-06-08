@@ -5,6 +5,7 @@
 #include <iostream>
 #include <map>
 #include <algorithm>
+#include <cmath>
 
 #include "util.h"
 
@@ -25,6 +26,25 @@ std::map<std::string, std::string> hexLU = {
 	{"1101", "D"},
 	{"1110", "E"},
 	{"1111", "F"}
+};
+
+std::map<char, std::string> binLU = {
+	{'0', "0000"},
+	{'1', "0001"},
+	{'2', "0010"},
+	{'3', "0011"},
+	{'4', "0100"},
+	{'5', "0101"},
+	{'6', "0110"},
+	{'7', "0111"},
+	{'8', "1000"},
+	{'9', "1001"},
+	{'A', "1010"},
+	{'B', "1011"},
+	{'C', "1100"},
+	{'D', "1101"},
+	{'E', "1110"},
+	{'F', "1111"},
 };
 
 std::string int_to_halfprecision(const std::string str) {
@@ -73,12 +93,49 @@ std::string int_to_bin(int num, unsigned int n) {
 	return bin;
 }
 
-std::string bin_to_2s(const std::string& bin) {
-	std::string ret = "";
-	for (int i = 0; i < bin.size(); ++i) {
-		ret += (bin[i] == '0') ? '1' : '0';
+int bin_to_int(const std::string& bin){
+	int ret = 0;
+	int len = bin.size();
+	for (int i = 0; i < len; i++) {
+		ret += (bin[i] == '1') ? std::pow(2.0, len - i - 1.0) : 0;
 	}
-	
+	return ret;
+}
+
+std::string ones_compliment(const std::string& bin) {
+	std::string ret = "";
+	for (int i = 0; i < bin.size(); i++) {
+		if (bin[i] == '1') { ret += '0'; }
+		else { ret += '1'; }
+	}
+	return ret;
+}
+
+std::string zero_str(int len) {
+	std::string str = "";
+	for (int i = 0; i < len; i++) {
+		str += '0';
+	}
+	return str;
+}
+
+std::string bin_to_2s(const std::string& bin) {
+	std::string ones = ones_compliment(bin);
+	std::string twos = zero_str(bin.size());
+	bool carry = true;
+	for (int i = bin.size() - 1; i >= 0; i--) {
+		if (ones[i] == '1' && carry) {
+			twos[i] = '0';
+		}
+		else if (ones[i] == '0' && carry) {
+			twos[i] = '1';
+			carry = false;
+		}
+		else {
+			twos[i] = ones[i];
+		}
+	}
+	return twos;
 }
 
 std::vector<std::string> StringToVector(std::string str, char separator) {
@@ -127,6 +184,39 @@ std::string BinToHex12(const std::string& binstr) {
 	}
 
 	return ret;
+}
+
+void trim_binary(std::string& bin, int len) {
+	// too short
+	while (bin.length() < len) {
+		bin = "0" + bin;
+	}
+
+	// too long
+	while (bin.length() > len) {
+		bin = bin.substr(1, std::string::npos);
+	}
+}
+
+std::string any_num_to_binary(const std::string& input, int len) {
+	std::string prefix = input.substr(0, 2);
+	if (prefix == "0b") { // binary format
+		std::string bin = input.substr(2, std::string::npos);
+		trim_binary(bin, len);
+		return bin;
+	}
+	else if (prefix == "0x") { // hex
+		std::string hex = input.substr(2, std::string::npos);
+		std::string bin = "";
+		for (int i = 0; i < hex.size(); i++) {
+			bin += binLU[hex[i]];
+		}
+		trim_binary(bin, len);
+		return bin;
+	}
+	else { // decimal
+		return int_to_bin(input, len);
+	}
 }
 
 
