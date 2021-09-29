@@ -1,6 +1,6 @@
 
 # MU0ARM Assembler
-This is a simple one-pass assembler for MU0ARM CPU Project @ Imperial
+This is a simple two-pass assembler for MU0ARM CPU Project @ Imperial
 
 **NOTE:** ALU instructions are all floating point
 
